@@ -1,13 +1,17 @@
 'use client';
 
+import { useFormState } from 'react-dom';
+import Link from 'next/link';
+
 import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
+import { updateInvoice } from '@/app/lib/actions';
+
 import {
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import Link from 'next/link';
 import { Button } from '@/app/ui/button';
 
 export default function EditInvoiceForm({
@@ -17,8 +21,13 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+   const initialState = { message: null, errors: {} };
+   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id); // using js bind becausing passing form id in the form actioin will not work
+   
+   const [state, dispatch] = useFormState(updateInvoiceWithId, initialState);
+
   return (
-    <form>
+    <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
